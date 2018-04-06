@@ -110,7 +110,32 @@ router.post(`/`, (req, res) => {
     });
 });
 
-//delete
+// update project with given id
+router.put(`/:id`, (req, res) => {
+  const { id } = req.params;
+  const projectUpdates = req.body ? req.body : {};
+
+  // update
+  projectModel
+    .update(id, projectUpdates)
+    .then(updatedProject => {
+      if (Object.keys(updatedProject).length > 0) {
+        // update done
+        res.status(200).json(updatedProject);
+      } else {
+        res.status(404).json({ message: `The project was not updated.` }); // nothing was updated
+      }
+    })
+    .catch(error => {
+      // Only display errors if in development mode
+      const errDetails = config.env === 'development' ? err : '';
+      res.status(500).json({
+        error: `The project information could not be modified. ${errDetails}`,
+      }); // database error
+    });
+});
+
+//delete project with given id
 router.delete(`/:id`, (req, res) => {
   const { id } = req.params;
   projectModel
@@ -118,7 +143,7 @@ router.delete(`/:id`, (req, res) => {
     .then(response => {
       if (Object.keys(response).length > 0) {
         // make a copy of the project
-        const project = { ...response };
+        const project = Object.assign(response);
         projectModel.remove(id).then(count => {
           res.status(200).json(project); // send the project deleted back with the response
         });

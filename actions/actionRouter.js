@@ -117,7 +117,32 @@ router.post(`/`, (req, res) => {
     });
 });
 
-//delete
+// update action with given id
+router.put(`/:id`, (req, res) => {
+  const { id } = req.params;
+  const actionUpdates = req.body ? req.body : {};
+
+  // update
+  actionModel
+    .update(id, actionUpdates)
+    .then(updatedAction => {
+      if (Object.keys(updatedAction).length > 0) {
+        // update done
+        res.status(200).json(updatedAction);
+      } else {
+        res.status(404).json({ message: `The action was not updated.` }); // nothing was updated
+      }
+    })
+    .catch(error => {
+      // Only display errors if in development mode
+      const errDetails = config.env === 'development' ? err : '';
+      res.status(500).json({
+        error: `The action information could not be modified. ${errDetails}`,
+      }); // database error
+    });
+});
+
+//delete action with given id
 router.delete(`/:id`, (req, res) => {
   const { id } = req.params;
   actionModel
@@ -125,7 +150,7 @@ router.delete(`/:id`, (req, res) => {
     .then(response => {
       if (Object.keys(response).length > 0) {
         // make a copy of the action
-        const action = { ...response };
+        const action = Object.assign(response);
         actionModel.remove(id).then(count => {
           res.status(200).json(action); // send the action deleted back with the response
         });
