@@ -1,0 +1,22 @@
+{
+  "name": "project-action",
+  "version": "1.0.0",
+  "description": "An API that performs CRUD operations on projects and actions",
+  "main": "server.js",
+  "repository": "https://github.com/emukupa/Sprint-Challenge-Node-Express.git",
+  "author": "Edward Manda <lilkups@yahoo.com>",
+  "license": "MIT",
+  "scripts": {
+    "start": "nodemon server.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.4",
+    "express": "^4.16.3",
+    "helmet": "^3.12.0",
+    "knex": "^0.14.4",
+    "morgan": "^1.9.0"
+  },
+  "devDependencies": {
+    "nodemon": "^1.17.3"
+  }
+}
