@@ -29,6 +29,28 @@ router.get(`/`, (req, res) => {
     });
 });
 
+// get actions for a given project id
+router.get(`/:id/actions`, (req, res) => {
+  const { id } = req.params;
+  projectModel
+    .getProjectActions(id)
+    .then(actions => {
+      if (actions.length > 0) {
+        // checks if any actions were found
+        res.status(200).json(actions);
+      } else {
+        res.status(404).json({ message: `No actions found!` }); // no actions found
+      }
+    })
+    .catch(err => {
+      // Only display errors if in development mode
+      const errDetails = config.env === 'development' ? err : '';
+      res
+        .status(500)
+        .json({ error: `The actions could not be retrieved. ${errDetails}` }); // database error
+    });
+});
+
 //get project by id
 router.get(`/:id`, (req, res) => {
   const { id } = req.params;
