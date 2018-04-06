@@ -1,6 +1,6 @@
 // bring in express, projectModel and config
 const express = require('express');
-const actionModel = require('../data/helpers/projectModel');
+const projectModel = require('../data/helpers/projectModel');
 const config = require('../api/config.js');
 
 // instantiate a router
@@ -10,7 +10,7 @@ const router = express.Router();
 
 // get projects
 router.get(`/`, (req, res) => {
-  actionModel
+  projectModel
     .get()
     .then(projects => {
       if (projects.length > 0) {
@@ -26,6 +26,27 @@ router.get(`/`, (req, res) => {
       res
         .status(500)
         .json({ error: `The projects could not be retrieved. ${errDetails}` }); // database error
+    });
+});
+
+//get project by id
+router.get(`/:id`, (req, res) => {
+  const { id } = req.params;
+  projectModel
+    .get(id)
+    .then(project => {
+      if (Object.keys(project).length > 0) {
+        res.status(200).json(project);
+      } else {
+        res.status(404).json({ message: `The project does not exist.` }); // project doesn't exist
+      }
+    })
+    .catch(err => {
+      // Only display errors if in development mode
+      const errDetails = config.env === 'development' ? err : '';
+      res.status(500).json({
+        error: `The project information could not be retrieved. ${errDetails}`,
+      }); // database error
     });
 });
 

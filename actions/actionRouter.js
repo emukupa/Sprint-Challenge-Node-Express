@@ -29,5 +29,26 @@ router.get(`/`, (req, res) => {
     });
 });
 
+//get action by id
+router.get(`/:id`, (req, res) => {
+  const { id } = req.params;
+  actionModel
+    .get(id)
+    .then(action => {
+      if (Object.keys(action).length > 0) {
+        res.status(200).json(action);
+      } else {
+        res.status(404).json({ message: `The action does not exist.` }); // action doesn't exist
+      }
+    })
+    .catch(err => {
+      // Only display errors if in development mode
+      const errDetails = config.env === 'development' ? err : '';
+      res.status(500).json({
+        error: `The action information could not be retrieved. ${errDetails}`,
+      }); // database error
+    });
+});
+
 //export the router
 module.exports = router;

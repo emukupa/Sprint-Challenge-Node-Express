@@ -4,6 +4,9 @@ const morgan = require(`morgan`);
 const helmet = require(`helmet`);
 const cors = require(`cors`);
 
+// bring in the config file;
+const config = require('./api/config.js');
+
 // bring in the projectRouter.js and actionRouter.js
 const projectRouter = require('./projects/projectRouter.js');
 const actionRouter = require('./actions/actionRouter.js');
@@ -42,7 +45,7 @@ server.get(`/`, (req, res) =>
 );
 
 // define a port to use
-const port = process.env.PORT || 5000;
+const port = config.port || 5000;
 
 // start listening to server requests
 server.listen(port, () =>
