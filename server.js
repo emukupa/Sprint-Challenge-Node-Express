@@ -32,7 +32,7 @@ const corsOptions = {
 server.use(cors(corsOptions));
 
 // use the projectRouter and actionRouter
-server.use('/api/project', projectRouter);
+server.use('/api/projects', projectRouter);
 server.use('/api/actions', actionRouter);
 
 // root get request
